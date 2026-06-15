@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="A shareable birthday surprise for Brishti with a photo, rain effect, and a special message." />
+  <meta property="og:title" content="For Brishti" />
+  <meta property="og:description" content="Tap the button for a birthday surprise." />
+  <meta property="og:type" content="website" />
+  <title>For Brishti</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      font-family: system-ui, sans-serif;
+      color: #3a2031;
+      background: linear-gradient(180deg, #fff9fc 0%, #ffeef7 48%, #fce8ff 100%);
+      overflow-x: hidden;
+    }
+    .rain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 500ms ease;
+      z-index: 0;
+    }
+    .rain.active { opacity: 1; }
+    .drop {
+      position: absolute;
+      bottom: 100%;
+      width: 2px;
+      height: 90px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(120,170,255,.85));
+      animation: rainfall linear infinite;
+    }
+    @keyframes rainfall {
+      to { transform: translateY(calc(100vh + 140px)); }
+    }
+    .shell {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+    .card {
+      width: min(92vw, 460px);
+      background: rgba(255,255,255,.75);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(117,53,93,.16);
+      border-radius: 1.75rem;
+      box-shadow: 0 20px 60px rgba(130,53,101,.18);
+      padding: 1.5rem;
+      text-align: center;
+      overflow: hidden;
+    }
+    h1 {
+      font-size: clamp(2rem, 1.2rem + 2.5vw, 3.5rem);
+      line-height: 1;
+      margin: .25rem 0 .75rem;
+    }
+    .eyebrow {
+      display: inline-block;
+      padding: .45rem .9rem;
+      border-radius: 999px;
+      background: rgba(255,214,107,.28);
+      font-size: .75rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    p {
+      margin: 0 auto 1.5rem;
+      color: #7d5b70;
+      font-size: clamp(1rem, .95rem + .25vw, 1.125rem);
+      max-width: 28ch;
+    }
+    .photo-wrap {
+      margin: 0 auto 1.5rem;
+      width: min(100%, 320px);
+      border-radius: 1.2rem;
+      overflow: hidden;
+      box-shadow: 0 14px 34px rgba(78,33,64,.16);
+    }
+    img {
+      width: 100%;
+      display: block;
+      height: auto;
+    }
+    .btn {
+      border: none;
+      background: #d94f8a;
+      color: #fff;
+      min-height: 48px;
+      padding: .95rem 1.3rem;
+      border-radius: 999px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .message {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transform: translateY(14px);
+      transition: max-height 700ms ease, opacity 700ms ease, transform 700ms ease, margin-top 700ms ease;
+      margin-top: 0;
+    }
+    .card.revealed .message {
+      max-height: 220px;
+      opacity: 1;
+      transform: translateY(0);
+      margin-top: 1.5rem;
+    }
+    .message h2 {
+      font-size: clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
+      margin: 0 0 .5rem;
+      color: #d94f8a;
+    }
+    .credit {
+      margin-top: 1rem;
+      font-size: .75rem;
+      color: #7d5b70;
+    }
+  </style>
+</head>
+<body>
+  <div class="rain" id="rain"></div>
+
+  <main class="shell">
+    <section class="card" id="card">
+      <div class="eyebrow">A little surprise</div>
+      <h1>For Brishti</h1>
+      <p>Tap the button and watch this birthday page turn into a tiny monsoon of love.</p>
+
+      <figure class="photo-wrap">
+        <img src="34045.jpg" alt="Birthday photo of Brishti" />
+      </figure>
+
+      <button class="btn" id="surpriseBtn">Click for Brishti</button>
+
+      <div class="message" id="message">
+        <h2>Happy birthday my love</h2>
+        <p>May your day feel as bright, warm, and beautiful as your smile.</p>
+      </div>
+
+      <div class="credit">Made with love.</div>
+    </section>
+  </main>
+
+  <script>
+    const rain = document.getElementById('rain');
+    const button = document.getElementById('surpriseBtn');
+    const card = document.getElementById('card');
+    let revealed = false;
+
+    function createRain() {
+      const count = Math.min(90, Math.floor(window.innerWidth / 12));
+      rain.innerHTML = '';
+      for (let i = 0; i < count; i++) {
+        const d = document.createElement('span');
+        d.className = 'drop';
+        d.style.left = Math.random() * 100 + 'vw';
+        d.style.animationDuration = (0.7 + Math.random() * 0.8) + 's';
+        d.style.animationDelay = (-Math.random() * 2) + 's';
+        d.style.opacity = .35 + Math.random() * .45;
+        d.style.height = (50 + Math.random() * 70) + 'px';
+        rain.appendChild(d);
+      }
+    }
+
+    createRain();
+    window.addEventListener('resize', createRain);
+
+    button.addEventListener('click', () => {
+      if (revealed) return;
+      revealed = true;
+      rain.classList.add('active');
+      card.classList.add('revealed');
+      button.textContent = 'For Brishti, always ❤️';
+      button.disabled = true;
+    });
+  </script>
+</body>
+</html>
